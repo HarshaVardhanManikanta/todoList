@@ -1,0 +1,7 @@
+const mongoose = require('mongoose');
+const mySchema = new mongoose.Schema({
+    task:String,
+    taskCompleted:{type:Boolean,default:false}
+})
+
+module.exports = mongoose.model('taskcollection',mySchema);
