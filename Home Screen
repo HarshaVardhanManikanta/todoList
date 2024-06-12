@@ -1,0 +1,89 @@
+import React,{useState} from 'react';
+import {View,Text,TouchableHighlight,TextInput,StyleSheet} from 'react-native';
+
+
+//Home Component
+
+const Home = ()=>{
+  const [taskValue,setTaskValue] = useState('');
+  //Post data API
+  const sendData =async ()=>{
+    try{
+      let taskName =await fetch('http://10.0.2.2:3000/postTask',{
+        method:'POST',
+        headers:{
+          'Content-Type' : 'application/json'
+        },
+        body:JSON.stringify({
+          inputTask:taskValue
+        })
+      });
+      (taskName)? console.log(`Got the data`):console.log(`Can't get data`)
+      taskName = await taskName.json();
+      console.log(taskName)
+      setTaskValue('')
+    }
+    catch(err){
+      console.log('Unable to get data',err)
+    }
+  }
+  return(
+    <View style={styles.outerView}>
+      <View style={styles.innerView1}>
+        <Text style={styles.titleText}>Create A New Task</Text>
+      </View>
+      <View style={styles.innerView2}>
+        <TextInput placeholder='Enter your task here' value={taskValue} multiline={true} style={styles.textInputStyle} onChangeText={(text)=>setTaskValue(text)}></TextInput>
+        <TouchableHighlight onPress={sendData}>
+          <Text style={styles.buttonStyle}>Add Task</Text>
+       </TouchableHighlight>
+      </View>
+    </View>
+  )
+}
+
+//exports
+export default Home
+
+//internal styles
+const styles = StyleSheet.create({
+  outerView:{
+    flex:1,
+  },
+  innerView1:{
+    flex:2,
+    alignItems:'center',
+    justifyContent:'flex-end'
+  },
+  innerView2:{
+    flex:3,
+    justifyContent:'flex-start',
+  },
+  titleText:{
+    color:'purple',
+    fontSize:28,
+    borderBottomWidth:1,
+    borderBottomColor:'indigo'
+  },
+  textInputStyle:{
+    borderWidth:1,
+    borderColor:'cornflowerblue',
+    borderRadius:5,
+    margin:20,
+    fontSize:20,
+    textAlign:'center'
+  },
+  buttonStyle:{
+    color:'white',
+    backgroundColor:'green',
+    fontSize:20,
+    textAlign:'center',
+    textAlignVertical:'center',
+    borderColor:'white',
+    borderWidth:1,
+    borderRadius:5,
+    padding:8,
+    marginLeft:20,
+    marginRight:20
+  }
+})
