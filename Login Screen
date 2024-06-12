@@ -1,0 +1,65 @@
+import { View, Text,TextInput,TouchableOpacity, TouchableHighlight} from 'react-native'
+import Icon from 'react-native-vector-icons/Feather';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import styles from './externalStyles';
+
+//component
+const SignIn = () => {
+    const entryFields = [
+        {
+            placeholder:'Enter your UserID',
+            icon:'user'
+        },
+        {
+            placeholder:'Enter your Password',
+            icon:'lock'
+        }
+    ]
+const iconSet = [{
+    icon:'user',
+    title:'Guest'
+},
+{
+    icon:'google',
+    title:'Google'
+},
+{
+    icon:'facebook',
+    title:'Facebook'
+},
+{
+    icon:'user-plus',
+    title:'SignUp'
+},]
+    return (
+        <View style={styles.outerView}>
+            <View style={styles.mainLogo}>
+                <FontAwesome name='edit' size={170} color='lightseagreen'></FontAwesome>
+            </View>
+            <Text style={styles.mainText}>Login to Your Account</Text>
+            {
+                entryFields.map((item,index)=><View style={styles.entryFiledView} key={index}><Icon name={item.icon} size={22} color='purple'></Icon><TextInput style={styles.textInputStyle} placeholder={item.placeholder} placeholderTextColor='darkslategrey'></TextInput></View>)
+            }
+            <View style={styles.forgotView}>
+                <Text style={styles.forgotText}>Forgot Password</Text>
+            </View>
+            <TouchableHighlight>
+            <Text style={styles.registerButton}>Login</Text>
+           </TouchableHighlight>
+            <View style={styles.tryView}>
+                <Text style={styles.tryText}>-----Try other Options-----</Text>
+            </View>
+          <View style={styles.parentIconView}>
+          {
+            iconSet.map((item,index)=><TouchableOpacity key={index} style={styles.iconView}>
+              <FontAwesome name={item.icon} size={17} color='white'></FontAwesome>
+              <Text style={{color:'white',fontSize:20}}>{item.title}</Text>
+            </TouchableOpacity>)
+           }
+          </View>
+        </View>
+    )
+}
+
+//exports 
+export default SignIn
