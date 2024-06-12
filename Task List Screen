@@ -1,52 +1,63 @@
 import React, { useState,useEffect} from 'react';
 import { Text, View, StyleSheet, TouchableHighlight, TouchableOpacity ,Button} from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
-
+import 'react-native-gesture-handler';
+import UpdateModal from './UpdateModal';
 // Component
 const TaskList = () => {
   const [taskArray, setTaskArray] = useState([]);
 
+  //Modal State 
+  const [showModal,setShowModal] = useState(false)
+  const closeModal = ()=>{
+    setShowModal(false)
+  }
 
-//get data from the database
-// const getTasks = async ()=>{
-//   let allTasks = await fetch('http://10.0.2.2:3000/getTasks');
-//   allTasks = await allTasks.json();
-//   setTaskArray(allTasks)
-// }
-
-//useEffect Hook for immediate rendering
-useEffect( ()=>{
-  const getTasks = async ()=>{
+//GET API
+const getTasks = async ()=>{
     let allTasks = await fetch('http://10.0.2.2:3000/getTasks');
     allTasks = await allTasks.json();
-    setTaskArray(allTasks)};
+    setTaskArray(allTasks)
+};
+  
+//useEffect Hook for immediate rendering
+useEffect( ()=>{
     getTasks();
 },[taskArray])
 
-// useEffect(()=>{
-//   const iconHandler = (id) => {
-//     setTaskArray(
-//       taskArray.map((item) =>
-//         id === item._id ? { ...item, taskCompleted: !item.taskCompleted } : item
-//       )
-//     );
-//   };
-// })
- // Handler function
-  const iconHandler = (id) => {
-    setTaskArray(
-      taskArray.map((item) =>
-        id === item._id ? { ...item, taskCompleted: !item.taskCompleted } : item
-      )
-    );
-  };
+//catching Id for update
+const [catchId,setCatchId] = useState('')
+
+//Id for delete API
+const [deleteCatchId,setDeleteCatchId] = useState('')
+
+//DELETE API
+const deleteTask = async()=>{
+  try{
+    let deletedTask = await fetch('http://10.0.2.2:3000/deleteTask',{
+        method:'DELETE',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({
+            deleteTaskId:deleteCatchId
+        })
+    });
+    deletedTask? console.log('Request Successful'):console.log('Unable to make a request')
+    deletedTask = await deletedTask.json();
+    console.log(deletedTask);
+}
+catch(err){
+    console.log(`Data Cannot be Updated,${err}`)
+}
+}
+
 
   return (
     <View style={styles.outerView}>
       {taskArray.map((val) => (
-        <TouchableOpacity onPress={() => iconHandler(val._id)} key={val._id} style={styles.taskView}>
-          {val.taskCompleted ? <Icon name='check-circle' size={20} color='blue' /> : <Icon name='circle' size={20} color='blue' />}
+        <TouchableOpacity  key={val._id} style={styles.taskView}>
           <Text style={styles.textStyles}>{val.task}</Text>
+          <Icon name='edit-2' size={25} color='seagreen' style={{margin:10}} onPress={()=>{setShowModal(true);setCatchId(val._id)}}></Icon>
+          <Icon name='trash' size={25} color='red' onPress={()=>{setDeleteCatchId(val._id);deleteTask()}}></Icon>
         </TouchableOpacity>
       ))}
       <TouchableHighlight onPress={() => console.log('Delete button pressed')}>
@@ -54,7 +65,9 @@ useEffect( ()=>{
           Delete Completed Tasks
         </Text>
       </TouchableHighlight>
-      {/* <Button title='Get Data' onPress={getTasks}></Button> */}
+      {
+        showModal? <UpdateModal showModal={showModal} closeModal={closeModal} setCatchId={catchId}></UpdateModal>:null
+      }
     </View> 
   );
 };
@@ -70,13 +83,19 @@ const styles = StyleSheet.create({
   },
   textStyles: {
     color: 'purple',
-    fontSize: 25,
+    fontSize: 20,
     padding: 8,
     margin: 10,
   },
   taskView: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginLeft: 10
+    justifyContent:'space-evenly',
+    marginLeft: 10,
+    borderRadius:5,
+    marginBottom:10,
+    borderWidth:1,
+    borderColor:'lightblue',
+    marginRight:10
   }
 });
