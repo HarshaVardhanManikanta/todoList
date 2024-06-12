@@ -6,7 +6,7 @@ import {View,Text,TouchableHighlight,TextInput,StyleSheet} from 'react-native';
 
 const Home = ()=>{
   const [taskValue,setTaskValue] = useState('');
-  //Post data API
+  //POST API
   const sendData =async ()=>{
     try{
       let taskName =await fetch('http://10.0.2.2:3000/postTask',{
