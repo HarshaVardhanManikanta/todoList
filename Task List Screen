@@ -1,0 +1,82 @@
+import React, { useState,useEffect} from 'react';
+import { Text, View, StyleSheet, TouchableHighlight, TouchableOpacity ,Button} from 'react-native';
+import Icon from 'react-native-vector-icons/Feather';
+
+// Component
+const TaskList = () => {
+  const [taskArray, setTaskArray] = useState([]);
+
+
+//get data from the database
+// const getTasks = async ()=>{
+//   let allTasks = await fetch('http://10.0.2.2:3000/getTasks');
+//   allTasks = await allTasks.json();
+//   setTaskArray(allTasks)
+// }
+
+//useEffect Hook for immediate rendering
+useEffect( ()=>{
+  const getTasks = async ()=>{
+    let allTasks = await fetch('http://10.0.2.2:3000/getTasks');
+    allTasks = await allTasks.json();
+    setTaskArray(allTasks)};
+    getTasks();
+},[taskArray])
+
+// useEffect(()=>{
+//   const iconHandler = (id) => {
+//     setTaskArray(
+//       taskArray.map((item) =>
+//         id === item._id ? { ...item, taskCompleted: !item.taskCompleted } : item
+//       )
+//     );
+//   };
+// })
+ // Handler function
+  const iconHandler = (id) => {
+    setTaskArray(
+      taskArray.map((item) =>
+        id === item._id ? { ...item, taskCompleted: !item.taskCompleted } : item
+      )
+    );
+  };
+
+  return (
+    <View style={styles.outerView}>
+      {taskArray.map((val) => (
+        <TouchableOpacity onPress={() => iconHandler(val._id)} key={val._id} style={styles.taskView}>
+          {val.taskCompleted ? <Icon name='check-circle' size={20} color='blue' /> : <Icon name='circle' size={20} color='blue' />}
+          <Text style={styles.textStyles}>{val.task}</Text>
+        </TouchableOpacity>
+      ))}
+      <TouchableHighlight onPress={() => console.log('Delete button pressed')}>
+        <Text style={[styles.textStyles, { backgroundColor: 'green', textAlign: 'center', fontSize: 18, width: 300, marginLeft: 50, color: 'white' }]}>
+          Delete Completed Tasks
+        </Text>
+      </TouchableHighlight>
+      {/* <Button title='Get Data' onPress={getTasks}></Button> */}
+    </View> 
+  );
+};
+
+// Export
+export default TaskList;
+
+// Internal styles
+const styles = StyleSheet.create({
+  outerView: {
+    flex: 1,
+    justifyContent: 'center'
+  },
+  textStyles: {
+    color: 'purple',
+    fontSize: 25,
+    padding: 8,
+    margin: 10,
+  },
+  taskView: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginLeft: 10
+  }
+});
