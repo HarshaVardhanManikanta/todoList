@@ -1,0 +1,43 @@
+const express = require('express');
+const connection = require('./config');
+const makeModel = require('./Schema');
+const myServer = express();
+const cors = require('cors');
+myServer.use(cors());
+
+
+
+//creating API
+myServer.use(express.json());
+
+
+//get API for retrieveing all the documents
+myServer.get('/getTasks',async (request,response)=>{
+    const collectTasks = await makeModel.find({});
+    response.status(200).json(collectTasks)
+})
+
+
+//Post API to post the Task Data and store in the DataBase
+//single document posting
+myServer.post('/postTask',async (request,response)=>{
+    const modelClass = new makeModel({
+        task: request.body.inputTask,
+        taskCompleted:false
+    })
+    const postedTask = await modelClass.save();
+    response.status(201).json(postedTask)
+})
+
+
+//Put API for updating the data in the database
+// myServer.put('/changeTask/:taskId',(request,response)=>{
+
+// })
+
+// //Delete API to delete data from the database
+// myServer.delete('/removeTask/:taskId',(request,response)=>{
+    
+// })
+
+myServer.listen(3000,()=>console.log('server has started at 3000 port'))
