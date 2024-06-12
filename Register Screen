@@ -1,0 +1,59 @@
+
+import { View, Text,TextInput,TouchableHighlight} from 'react-native'
+import Icon from 'react-native-vector-icons/Feather';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import styles from './externalStyles'
+//component
+const SignUp = () => {
+    const entryFields = [
+        {
+            placeholder:'Enter your UserID',
+            icon:'user'
+        },
+        {
+            placeholder:'Enter your Password',
+            icon:'lock'
+        },
+        {
+            placeholder:'Confirm your Password',
+            icon:'lock'
+        }
+    ]
+// const iconSet = [{
+//     icon:'user',
+//     title:'Guest'
+// },
+// {
+//     icon:'google',
+//     title:'Google'
+// },
+// {
+//     icon:'facebook',
+//     title:'Facebook'
+// },
+// {
+//     icon:'user-plus',
+//     title:'SignUp'
+// },]
+    return (
+        <View style={styles.outerView}>
+            <View style={styles.mainLogo}>
+                <FontAwesome name='edit' size={170} color='lightseagreen'></FontAwesome>
+            </View>
+            <Text style={styles.mainText}>Register Your Account</Text>
+            {/* <View>
+                <TextInput placeholder='Enter your UserID'></TextInput>
+                <TextInput placeholder='Enter your Password'></TextInput>
+            </View> */}
+            {
+                entryFields.map((item,index)=><View style={styles.entryFiledView} key={index}><Icon name={item.icon} size={22} color='purple'></Icon><TextInput style={styles.textInputStyle} placeholder={item.placeholder} placeholderTextColor='darkslategrey'></TextInput></View>)
+            }
+           <TouchableHighlight>
+            <Text style={styles.registerButton}>Register</Text>
+           </TouchableHighlight>
+        </View>
+    )
+}
+
+//exports 
+export default SignUp
