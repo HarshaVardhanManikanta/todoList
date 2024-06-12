@@ -1,0 +1,86 @@
+import React from 'react';
+import {View,Text,TouchableHighlight,StyleSheet,Image,TouchableOpacity} from 'react-native';
+import Icon from 'react-native-vector-icons/Feather';
+import {Title} from 'react-native-paper'
+
+//component
+const Account = ()=>{
+  const detailsArray = [
+    {
+      id:1,
+      title:'Change Password',
+      icon:'lock'
+    },
+    {
+      id:2,
+      title:'Edit Profile',
+      icon:'edit'
+    },
+    {
+      id:3,
+      title:'See Progress',
+      icon:'bar-chart'
+    },
+    {
+      id:4,
+      title:'Sign Out',
+      icon:'log-out'
+    }
+  ]
+  return(
+    <View style={styles.outerView}>
+     <View style={styles.innerView1}>
+        <Image source={{uri:'https://images.unsplash.com/photo-1513956589380-bad6acb9b9d4?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Njh8fG1vZGVsJTIwaW1hZ2UlMjBzaWRlJTIwcHJvZmlsZXxlbnwwfHwwfHx8MA%3D%3D'}} style={styles.profileStyle}></Image>
+        <Title style={styles.usernameStyle}>Adam Levine</Title>
+      </View>
+     {
+        detailsArray.map((item)=><TouchableOpacity key={item.id}><View style={styles.IconView}><Icon name={item.icon} size={20} color='blue'></Icon><Text key={item.id} style={styles.buttonStyle}>{item.title}</Text></View></TouchableOpacity>)
+      }
+    </View>
+  )
+}
+
+//exports
+export default Account
+
+//internal styles
+const styles = StyleSheet.create({
+  outerView:{
+    flex:1,
+    justifyContent:'center'
+  },
+  innerView1:{
+    alignItems:'center'
+  },
+  IconView:{
+    flexDirection:'row',
+    alignItems:'center',
+    marginLeft:15,
+    marginTop:20
+  },
+  profileStyle:{
+    height:80,
+    width:80,
+    borderRadius:40,
+    borderColor:'green',
+    borderWidth:1
+  },
+  usernameStyle:{
+    color:'green',
+    fontSize:25,
+    fontFamily:'sans-serif',
+    fontWeight:'800'
+  },
+  innerView2:{
+    flex:1,
+  },
+  buttonStyle:{
+    color:'purple',
+    padding:5,
+    margin:8,
+    borderColor:'rgba(0,0,0,0)',
+    borderRadius:5,
+    borderWidth:1,
+    fontSize:20
+  }
+})
