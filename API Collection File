@@ -1,10 +1,8 @@
 const express = require('express');
-const connection = require('./config');
+const connection = require('./connections');
 const makeModel = require('./Schema');
 const myServer = express();
-const cors = require('cors');
-myServer.use(cors());
-
+const mongoose = require('mongoose')
 
 
 //creating API
@@ -31,13 +29,15 @@ myServer.post('/postTask',async (request,response)=>{
 
 
 //Put API for updating the data in the database
-// myServer.put('/changeTask/:taskId',(request,response)=>{
-
-// })
+myServer.put('/updateTasks',async (request,response)=>{
+    const updatedTask = await makeModel.updateOne({_id:new mongoose.Types.ObjectId(request.body.updateTaskId)},{$set:{task:request.body.replaceTask}});
+    response.json(updatedTask)
+})
 
 // //Delete API to delete data from the database
-// myServer.delete('/removeTask/:taskId',(request,response)=>{
-    
-// })
+myServer.delete('/deleteTask',async (request,response)=>{
+    const deletedTask = await makeModel.deleteOne({_id:new mongoose.Types.ObjectId(request.body.deleteTaskId)})
+    response.json(deletedTask)
+})
 
 myServer.listen(3000,()=>console.log('server has started at 3000 port'))
