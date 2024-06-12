@@ -1,0 +1,40 @@
+import React from 'react';
+import {Text} from 'react-native'
+import { NavigationContainer } from '@react-navigation/native';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import Home from './screens/HomeScreen';
+import TaskList from './screens/TaskList';
+import Account from './screens/Account';
+import Icon from 'react-native-vector-icons/Feather'
+import SignIn from './screens/SignIn';
+import SignUp from './screens/SignUp';
+//component
+
+const App = ()=>{
+  const tabNav = createBottomTabNavigator()
+  return(
+    <NavigationContainer>
+      <tabNav.Navigator screenOptions={{
+        activeTintColor:'blue'
+      }}>
+        <tabNav.Screen name='Home Screen' component={Home} options={{
+          tabBarIcon:({focused})=>(<Icon name = 'home' size={20} color={focused? 'purple':'grey'} />
+          ),
+          tabBarLabel:({focused})=>(<Text style={{fontSize:15,color:focused? 'purple':'grey'}}>Home</Text>)
+        }}></tabNav.Screen>
+        <tabNav.Screen name='Task Screen' component={TaskList} options={{
+          tabBarIcon:({focused})=><Icon name='list' size={20} color={focused? 'purple':'grey'}></Icon>,
+          tabBarLabel:({focused})=><Text style={{fontSize:15,color:focused? 'purple':'grey'}}>MyTasks</Text>
+        }}></tabNav.Screen>
+        <tabNav.Screen name='Account Screen' component={Account} options={{
+          tabBarIcon:({focused})=><Icon name='user' size={20} color={focused? 'purple':'grey'}></Icon>,
+          tabBarLabel:({focused})=><Text style={{fontSize:15,color:focused? 'purple':'grey'}}>Account</Text>
+        }}></tabNav.Screen>
+      </tabNav.Navigator>
+    </NavigationContainer>
+  )
+ 
+}
+
+//exports
+export default App
