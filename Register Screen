@@ -1,1 +1,30 @@
+import { View, Text,TextInput,TouchableHighlight} from 'react-native'
+import Icon from 'react-native-vector-icons/Feather';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import styles from './externalStyles'
+//component
+const SignUp = () => {
+    
+    return (
+        <View style={styles.outerView}>
+            <View style={styles.mainLogo}>
+                <FontAwesome name='edit' size={170} color='lightseagreen'></FontAwesome>
+            </View>
+            
+            <Text style={styles.mainText}>Register Your Account</Text>
+            
+            <View style={styles.entryFiledView}><Icon name='user' size={22} color='cornflowerblue'></Icon><TextInput style={styles.textInputStyle} placeholder='Enter your UserID' placeholderTextColor='darkslategrey'></TextInput></View>
+            
+            <View style={styles.entryFiledView}><Icon name='lock' size={22} color='cornflowerblue'></Icon><TextInput style={styles.textInputStyle} placeholder='Enter your Password' placeholderTextColor='darkslategrey'></TextInput></View>
+            
+            <View style={styles.entryFiledView}><Icon name='lock' size={22} color='cornflowerblue'></Icon><TextInput style={styles.textInputStyle} placeholder='Confirm your Password' placeholderTextColor='darkslategrey'></TextInput></View>
+            
+            <TouchableHighlight style={styles.touchableStyle}>
+                <Text style={styles.buttonStyle}>Create Account</Text>
+            </TouchableHighlight>
+        </View>
+    )
+}
 
+//exports 
+export default SignUp
