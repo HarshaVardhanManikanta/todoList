@@ -1,28 +1,68 @@
-import { View, Text,TextInput,TouchableHighlight} from 'react-native'
+import { ScrollView,View, Text,TextInput,TouchableHighlight} from 'react-native'
 import Icon from 'react-native-vector-icons/Feather';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import styles from './externalStyles'
+import {useState} from 'react'
 //component
 const SignUp = () => {
     
+    //User Name Validation
+    const [collectUname,setCollectUname] = useState('')
+
+
+    //Password Regex
+    const passwordPattern = /^(?=(?:.*[A-Za-z]){1})(?=(?:.*[0-9]){1})(?=(?:.*[@_*%^]){1})[A-Za-z0-9@_*%^]{8,15}$/
+
+    //Password Validation 
+    const [collectPassword,setCollectPassword] = useState('');
+    const [validPassword,setValidPassword] = useState('');
+    const [comparePassword,setComparePassword]= useState('')
+    //password handler function
+    function handlePassword(value){
+        setCollectPassword(value);
+        setComparePassword(value)
+        if(value.length>0){
+            setValidPassword(passwordPattern.test(value))
+        }
+    }
+
+    //confirm password handler
+    const [confirmPassword,setConfirmPassword] =useState('');
+    const [lengthCheck,setLengthCheck] = useState('')
+    //confirm password handler function
+    function handleConfirmPassword(value){
+        setConfirmPassword(value);
+        if(value.length>0){
+            setLengthCheck(true)
+        }
+    }
     return (
-        <View style={styles.outerView}>
+        <ScrollView>
+            <View style={styles.outerView}>
             <View style={styles.mainLogo}>
                 <FontAwesome name='edit' size={170} color='lightseagreen'></FontAwesome>
             </View>
             
             <Text style={styles.mainText}>Register Your Account</Text>
             
-            <View style={styles.entryFiledView}><Icon name='user' size={22} color='cornflowerblue'></Icon><TextInput style={styles.textInputStyle} placeholder='Enter your UserID' placeholderTextColor='darkslategrey'></TextInput></View>
-            
-            <View style={styles.entryFiledView}><Icon name='lock' size={22} color='cornflowerblue'></Icon><TextInput style={styles.textInputStyle} placeholder='Enter your Password' placeholderTextColor='darkslategrey'></TextInput></View>
-            
-            <View style={styles.entryFiledView}><Icon name='lock' size={22} color='cornflowerblue'></Icon><TextInput style={styles.textInputStyle} placeholder='Confirm your Password' placeholderTextColor='darkslategrey'></TextInput></View>
-            
+            <View style={styles.entryFiledView}><Icon name='user' size={22} color='cornflowerblue'></Icon><TextInput maxLength={30} style={styles.textInputStyle} placeholder='Enter your UserID' placeholderTextColor='darkslategrey' onChangeText={(text)=>setCollectUname(text)} value={collectUname}></TextInput></View>
+            {
+                (collectUname.length>0 && collectUname.length<3)? <Text style={{color:'red',texAlign:'center'}}>Please Enter Valid UserName</Text>:null
+            }
+            <View style={styles.entryFiledView}><Icon name='lock' size={22} color='cornflowerblue'></Icon><TextInput style={styles.textInputStyle} placeholder='Enter your Password' placeholderTextColor='darkslategrey' value={collectPassword} onChangeText={(text)=>handlePassword(text)}
+                maxLength={15}></TextInput></View>
+            {
+                collectPassword.length>0? ((validPassword && collectPassword.length>8 )? null: <Text style={{color:'red'}}>Please Enter a valid password</Text>):null
+            }
+            <View style={styles.entryFiledView}><Icon name='lock' size={22} color='cornflowerblue'></Icon><TextInput style={styles.textInputStyle} placeholder='Confirm your Password' placeholderTextColor='darkslategrey' value={confirmPassword} onChangeText={(text)=>handleConfirmPassword(text)}></TextInput></View>
+            {
+               lengthCheck? (comparePassword===confirmPassword? null: <Text style={{color:'red'}}>Passwords are not matching</Text>):null
+            }
             <TouchableHighlight style={styles.touchableStyle}>
                 <Text style={styles.buttonStyle}>Create Account</Text>
             </TouchableHighlight>
         </View>
+        </ScrollView>
     )
 }
 
