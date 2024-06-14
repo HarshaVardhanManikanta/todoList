@@ -1,89 +1,66 @@
-import {ScrollView,View, Text,TextInput,TouchableHighlight} from 'react-native'
+import React, { useState } from 'react';
+import { ScrollView, View, Text, TextInput, TouchableHighlight } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import styles from './externalStyles';
-import {useState} from  'react';
-//component
+
 const SignIn = () => {
+    const [hidePassword, setHidePassword] = useState(true);
+    const [iconVisible, setIconVisible] = useState(false);
+    const [valPassword, setValPassword] = useState('');
 
-// const iconSet = [{
-//     icon:'user',
-//     title:'Guest'
-// },
-// {
-//     icon:'google',
-//     title:'Google'
-// },
-// {
-//     icon:'facebook',
-//     title:'Facebook'
-// },
-// {
-//     icon:'user-plus',
-//     title:'SignUp'
-// },]
+    const handlePassword = (item) => {
+        setValPassword(item);
+        setIconVisible(item.length > 0);
+    };
 
-//userId states
-const [userId,setUserId] = useState('')
-const [userValidator,setUserValidator] = useState(false);
+    const togglePasswordVisibility = () => {
+        setHidePassword(!hidePassword);
+    };
 
-//userId handler function 
-function handleUser(value){
-    setUserId(value)
-    value.length>=8? setUserValidator(true):setUserValidator(false)
-}
-
-//password states
-const [showPassword,setShowPassword] = useState(true);
-const [openIcon,setOpenIcon] = useState(true)
-const [iconVisible,setIconVisible] = useState(false)
-const [valPassword,setValPassword] = useState('')
-
-//passwordHandler Function
-const handlePassword = (item)=>{
-    setValPassword(item);
-    valPassword.length>0? setIconVisible(true):setIconVisible(false)
-}
     return (
         <ScrollView>
             <View style={styles.outerView}>
-            <View style={styles.mainLogo}>
-                <FontAwesome name='edit' size={170} color='lightseagreen'></FontAwesome>
+                <View style={styles.mainLogo}>
+                    <FontAwesome name='edit' size={170} color='lightseagreen' />
+                </View>
+                <Text style={styles.mainText}>Login to Your Account</Text>
+                <View style={styles.entryFiledView}>
+                    <Icon name='user' size={22} color='cornflowerblue' />
+                    <TextInput
+                        style={styles.textInputStyle}
+                        placeholder='Enter your User Id'
+                        placeholderTextColor='darkslategrey'
+                    />
+                </View>
+                <View style={styles.entryFiledView}>
+                    <Icon name='lock' size={22} color='cornflowerblue' />
+                    <TextInput
+                        style={styles.textInputStyle}
+                        placeholder='Enter your Password'
+                        placeholderTextColor='darkslategrey'
+                        secureTextEntry={hidePassword}
+                        onChangeText={(val) => handlePassword(val)}
+                        value={valPassword}
+                    />
+                    {iconVisible && (
+                            <Icon
+                                onPress={togglePasswordVisibility}
+                                name={hidePassword ? 'eye' : 'eye-off'}
+                                size={20}
+                                color='cornflowerblue'
+                            />
+                    )}
+                </View>
+                <View style={styles.forgotView}>
+                    <Text style={styles.forgotText}>Forgot Password</Text>
+                </View>
+                <TouchableHighlight style={styles.touchableStyle}>
+                    <Text style={styles.buttonStyle}>Login Account</Text>
+                </TouchableHighlight>
             </View>
-            <Text style={styles.mainText}>Login to Your Account</Text>
-            <View style={styles.entryFiledView}>
-                <Icon name='user' size={22} color='cornflowerblue'></Icon>
-                <TextInput style={styles.textInputStyle} placeholder='Enter your User Id' placeholderTextColor='darkslategrey' onChangeText={(text)=>{handleUser(text)}} value={userId}></TextInput>
-                {
-                userId.length>=1?  userValidator? (<FontAwesome name='check-circle-o' size={20} color='green' style={{marginLeft:10}}></FontAwesome>):(<FontAwesome style={{marginLeft:10}} name='times-circle-o' size={20} color='red'></FontAwesome>):null
-                }
-            </View>
-            {
-                userId.length>=1 && userId.length<8? <Text style={{color:'red',fontSize:15}}>Name should be atleast 8 Characters</Text>:null
-            }
-          
-              <View style={styles.entryFiledView}>
-                <Icon name='lock' size={22} color='cornflowerblue'></Icon>
-                <TextInput style={styles.textInputStyle} placeholder='Enter your Password' placeholderTextColor='darkslategrey' secureTextEntry={showPassword} onChangeText={(val)=>handlePassword(val)}></TextInput>
-                {iconVisible? openIcon? (<Icon name='eye' size={20} color='cornflowerblue' onPress={()=>{setOpenIcon(false);setShowPassword(false)}}></Icon>):(<Icon name='eye-off' size={20} color='cornflowerblue' onPress={()=>{setOpenIcon(true);setShowPassword(true)}}></Icon>):null}
-              </View>
-            <View style={styles.forgotView}>
-                <Text style={styles.forgotText}>Forgot Password</Text>
-            </View>
-            {/* <View style={styles.tryView}>
-                <Text style={styles.tryText}>---------Try other Options---------</Text>
-            </View> */}
-            {/* <View>
-                <Text>Icons</Text>
-            </View> */}
-            <TouchableHighlight style={styles.touchableStyle}>
-                <Text style={styles.buttonStyle}>Login Account</Text>
-            </TouchableHighlight>
-        </View>
         </ScrollView>
-    )
-}
+    );
+};
 
-//exports 
-export default SignIn
-
+export default SignIn;
