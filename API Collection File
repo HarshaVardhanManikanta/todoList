@@ -1,13 +1,36 @@
 const express = require('express');
-const connection = require('./connections');
+const connection = require('./config');
 const makeModel = require('./Schema');
 const myServer = express();
 const mongoose = require('mongoose')
-
-
+const createUser = require('./UserSchema')
+const bcrypt = require('bcryptjs')
 //creating API
 myServer.use(express.json());
 
+
+//UserCreation API
+myServer.post('/createAccount',async (request,response)=>{
+   try{
+    const {username,email,password} = request.body;
+   const registeredUser = await createUser.findOne({email:email})
+   console.log(registeredUser.email)
+   if(registeredUser){
+    return response.send('User already exists')
+   }
+   const saltrounds = 10
+   const encryptedPassword = await bcrypt.hash(password,saltrounds)
+   const userCreateMessage = await createUser.create({
+    userName:username,
+    email:email,
+    password:encryptedPassword
+   })
+   response.send('User Created Successfully')
+   }
+   catch(err){
+    response.send('User cannot be Created')
+   }
+})
 
 //get API for retrieveing all the documents
 myServer.get('/getTasks',async (request,response)=>{
@@ -39,5 +62,6 @@ myServer.delete('/deleteTask',async (request,response)=>{
     const deletedTask = await makeModel.deleteOne({_id:new mongoose.Types.ObjectId(request.body.deleteTaskId)})
     response.json(deletedTask)
 })
+
 
 myServer.listen(3000,()=>console.log('server has started at 3000 port'))
