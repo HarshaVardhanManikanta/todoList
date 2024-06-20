@@ -4,7 +4,9 @@ const makeModel = require('./Schema');
 const myServer = express();
 const mongoose = require('mongoose')
 const createUser = require('./UserSchema')
-const bcrypt = require('bcryptjs')
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const secretKey = 'secretkey'
 //creating API
 myServer.use(express.json());
 
@@ -14,7 +16,6 @@ myServer.post('/createAccount',async (request,response)=>{
    try{
     const {username,email,password} = request.body;
    const registeredUser = await createUser.findOne({email:email})
-   console.log(registeredUser.email)
    if(registeredUser){
     return response.send('User already exists')
    }
@@ -25,13 +26,32 @@ myServer.post('/createAccount',async (request,response)=>{
     email:email,
     password:encryptedPassword
    })
-   response.send('User Created Successfully')
+   response.json(userCreateMessage)
    }
    catch(err){
-    response.send('User cannot be Created')
+    response.json({message:err})
    }
 })
 
+
+//userLogin API
+myServer.post('/loginUser',async(request,response)=>{
+    try{
+        const {userId,password} = request.body;
+    const OldUser = await createUser.findOne({email:userId});
+    console.log(OldUser)
+    if(!OldUser){
+        return response.json({noUser:'User does not exist'})
+    }
+    if(bcrypt.compare(password,OldUser.password)){
+        const token = jwt.sign({usermail:userId},secretKey);
+        response.json({tokenData:token})
+    }
+    }
+    catch(err){
+        console.log(err)
+    }
+})
 //get API for retrieveing all the documents
 myServer.get('/getTasks',async (request,response)=>{
     const collectTasks = await makeModel.find({});
