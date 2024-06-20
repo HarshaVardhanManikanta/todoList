@@ -18,6 +18,31 @@ const SignIn = () => {
         setHidePassword(!hidePassword);
     };
 
+   const [user,setUser] = useState('');
+
+    //Login API
+
+    async function loginUser(){
+       try{
+        let resultToken = await fetch('http://10.0.2.2:3000/loginUser',{
+            method:'POST',
+            headers:{'Content-Type':'application/json'},
+            body:JSON.stringify({
+                userId:user,
+                password:valPassword
+            })
+        })
+        if(resultToken){
+            console.log('Token was formed')
+            resultToken = await resultToken.json();
+            console.log(resultToken)
+        }
+       }
+       catch(err){
+        console.log(err)
+       }
+    }
+
     return (
         <ScrollView>
             <View style={styles.outerView}>
